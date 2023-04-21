@@ -16,11 +16,12 @@ def quicksort(items):
 def display_tasks(tasks):
     print("\nTo-Do List:\n")
     for i in range(len(tasks)):
-        print(f"{i+1}. {tasks[i]}")
+        status = "Done" if tasks[i][1] else "Not done"
+        print(f"{i+1}. {tasks[i][0]} ({status})")
 
 def add_task(tasks):
     task = input("Enter the task: ")
-    tasks.append(task)
+    tasks.append([task, False])
     print("Task added successfully!")
     return tasks
 
@@ -29,6 +30,13 @@ def remove_task(tasks):
     choice = int(input("Enter the number of the task to remove: ")) - 1
     tasks.pop(choice)
     print("Task removed successfully!")
+    return tasks
+    
+def mark_task_done(tasks):
+    display_tasks(tasks)
+    choice = int(input("Enter the number of the task to mark as done: ")) - 1
+    tasks[choice][1] = True
+    print("Task marked as done!")
     return tasks
 
 # Load tasks from a file, if it exists
@@ -44,8 +52,9 @@ while True:
     print("1. Show List")
     print("2. Add Task")
     print("3. Remove Task")
-    print("4. Clear List")
-    print("5. Exit")
+    print("4. Mark Task as Done")
+    print("5. Clear List")
+    print("6. Exit")
     choice = int(input("\nEnter your choice: "))
 
     # If the user chooses to show the list
@@ -61,13 +70,17 @@ while True:
     elif choice == 3:
         tasks = remove_task(tasks)
 
-    # If the user chooses to clear the list
+    # If the user chooses to mark a task as done
     elif choice == 4:
+        tasks = mark_task_done(tasks)
+        
+    # If the user chooses to clear the list
+    elif choice == 5:
         tasks.clear()
         print("List cleared successfully!")
 
     # If the user chooses to exit
-    elif choice == 5:
+    elif choice == 6:
         # Save tasks to a file
         with open(filename, "w") as f:
             for task in tasks:
